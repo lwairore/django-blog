@@ -2,6 +2,13 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from  django.urls import reverse
+from taggit.managers import TaggableManager
+"""
+    After implementing your comment system, you will create a way to tag our posts. You will do this by integrating a third-party Django tagging application in our project.
+    The `django-taggit` module is a reusable application that primarily offers you a `Tag` model and a manager to easily add tags to any model. You can take a look at its source code at https://github.com/alex/django-taggit. 
+        `pip install django_taggit==0.22.2`
+"""
+
 
 # Create your models here.
 class PublishedManager(models.Manager):
@@ -45,6 +52,7 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     objects = models.Manager() # The default manager.
     published = PublishedManager() # Our custom manager.
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-publish',)
