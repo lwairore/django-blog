@@ -3,6 +3,29 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
+class PublishedManager(models.Manager):
+    """
+        `objects` is the default manager of every model that retrieves all
+        objects in the database. However, we can also define custom managers
+        for our models. `PublishedManager` is a custom manager that retrieves all posts
+        with the `published` status.
+
+        There are two ways to add a manager to your models: 
+            1. You can add extra manager methods 
+            2. Or modify initial manager QuerySets.
+        The first method provides you with a QuerySet API such as `Post.objects.my_manager()`, and
+        the later provides you with `Post.my_manager.all()`. The manager will allow us to 
+        retrieve posts using `Post.published.all()`.
+
+        The `get_queryset()` method of a manager returns the QuerySet that will be executed. We
+        override this method to include our custom filter in the final QuerySet.  
+
+        Usage `Post.published.filter(title__startswith='Who')` to retrieve all published posts whose title starts with `who`.
+    """
+    def get_queryset(self):
+        return super(PublishedManager, self).get_queryset()\
+            .filter(status='published')
+
 class Post(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -19,6 +42,8 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+    objects = models.Manager() # The default manager.
+    published = PublishedManager() # Our custom manager.
 
     class Meta:
         ordering = ('-publish',)
