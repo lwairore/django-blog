@@ -1,0 +1,9 @@
+Now that we have implemented tagging for our blog posts, we can do many interesting things with them. Using tags, we can classify our blog posts very well. Posts about similar topics will have several tags in common. We will build a functionality to display similar posts by the number of tags they share. In this way, when a user reads a post, we can suggest to them that they read other related posts.
+
+In order to retrieve similar posts for a specific post, we need to perform the following steps:
+    1. Retrieve all tags for the current post
+    2. Get all posts that are tagged with any of those tags
+    3. Exclude the current post from that list to avoid recommending the same post
+    4. Order the results by the number of tags shared with the current post
+    5. In case of two or more posts with the same number of tags, recommend the most recent post
+    6. Limit the query to the number of posts we want to recommend
