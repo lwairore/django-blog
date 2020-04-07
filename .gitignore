@@ -1,3 +1,4 @@
 virtual/
 .vscode/
 */migrations/*
+*/__pycache__/*
