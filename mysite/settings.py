@@ -80,6 +80,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:4200',
+]
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
