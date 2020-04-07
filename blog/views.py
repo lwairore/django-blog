@@ -6,6 +6,7 @@ from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.conf import settings
 from taggit.models import Tag
+from django.db.models import Count
 
 # Create your views here.
 class PostListView(ListView):
@@ -66,14 +67,30 @@ def post_detail(request, year, month, day, post):
     else:
         comment_form = forms.CommentForm()
 
-    
+    # List of similar posts
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = models.Post.published.filter(tags__in=post_tags_ids)\
+                                .exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
+                                .order_by('-same_tags','-publish')[:4]
+    """
+        The preceding code is as follows:
+            1. We retrieve a Python list of IDs for the tags of the current post. The  `values_list()` QuerySet returns tuples with the values for the given fields. We pass `flat=True` to it to get a flat list like `[1, 2, 3, ...]`.
+            2. We get all posts that contain any of these tags, excluding the current post itself.
+            3. We use the `Count` aggregation function to generate a calculated field—`same_tags`— that
+                contains the number of tags shared with all the tags queried.
+            4. We order the result by the number of shared tags (descending order) and by `publish` to 
+                display recent posts first for the posts with the same number of shared tags. We slice the result
+                only the first four posts.
+    """
 
     return render(request,
                   'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
                    'new_comment': new_comment,
-                   'comment_form': comment_form,})
+                   'comment_form': comment_form,
+                   'similar_posts': similar_posts})
 
 
 def post_share(request, post_id):
