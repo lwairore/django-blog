@@ -143,3 +143,27 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+"""
+    Sending emails with Django is pretty straightforward. First, you will need to have a local SMTP server or define the configuration of an external SMTP server by adding the following:
+        1. EMAIL_HOST: The SMTP server host; the default is `localhost`
+        2. EMAIL_PORT: The SMTP port; the default is 25
+        3. EMAIL_HOST_USER: Username for the SMTP server
+        4. EMAIL_HOST_PASSWORD: Password for the SMTP server
+        5. EMAIL_USE_TLS: Whether to use a TLS secure connection
+        6. EMAIL_USE_SSL: Whether to use an implicit TLS secure connection
+    
+    If you cannot use an SMTP server, you can tell Django to write emails to the console by adding the following:
+        `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
+    By using this setting, Django will output all emails to the shell. This is very useful for testing your application without an SMTP server.
+
+    Run the python manage.py shell command to open the Python shell and send an email, as follows:
+        >>> from django.core.mail import send_mail
+        >>> send_mail('Django mail', 'This e-mail was sent with Django.', 'your_account@gmail.com', ['your_account@gmail.com'], fail_silently=False)
+"""
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kwairore@gmail.com'
+EMAIL_HOST_PASSWORD = 'kwairore8754'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
