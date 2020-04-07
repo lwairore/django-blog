@@ -50,7 +50,23 @@ def post_detail(request, year, month, day, post):
         post with the given slug and date. 
     """
     post = get_object_or_404(models.Post, slug=post, status='published', publish__year=year, publish__month=month, publish__day=day)
-    return render(request, 'blog/post/detail.html', { 'post': post })
+
+    # List of active comments for this post
+    comments = post.comments.filter(active=True)
+
+    new_comment = None:
+    
+    if request.method == 'POST':
+        # A comment was posted
+        comment_from = forms.CommentForm(data=request.POST)
+        if comment_from.is_valid():
+            # Create Comment object but don't save to database yet
+            new_comment = comment_from.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.save()
+    else:
+        comment_from = forms.CommentForm()
+    return render(request, 'blog/post/detail.html', { 'post': post, 'comments': comments, 'new_comment': new_comment, 'comment_from': comment_from })
 
 
 def post_share(request, post_id):
