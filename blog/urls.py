@@ -1,9 +1,14 @@
 from django.urls import path
-from . import views
+from . import views, sitemaps
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
 
 app_name = 'blog'
+
+sitemaps = {
+    'posts': sitemaps.PostSitemap,
+}
 
 """
         We use angle brackets to capture the values from the URL.
@@ -22,6 +27,9 @@ urlpatterns = [
     path('tag/<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),
     path('<int:year>/<int:month>/<int:day>/<slug:post>/', views.post_detail, name='post_detail'),
     path('<int:post_id>/share/',views.post_share, name='post_share'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap')
+
 ]
 
 if settings.DEBUG:
