@@ -1,0 +1,24 @@
+>> from blog.models import Post
+>> Post.objects.filter(body__search='django') // This query uses PostgreSQL to create a search vector for the `body` ield and a search query from the term `django`. Results are obtained by matching the query with the vector.  
+
+Searching against multiple fields
+----------------------------
+You might want to search against multiple fields. In this case, you will need to define `SearchVector`. Let's build a vector that allows us to search against the `title` and `body` fields of the `Post` model:
+>> from django.contrib.postgres.search import SearchVector
+>> from blog.models import Post
+>> Post.objects.annotate(
+...    search=SearchVector('title', 'body'),
+...   ).filter(search='django')
+
+Using annotate and defining `SearchVector` with both fields, we provide a functionality to match the query against both the title and body of the posts.
+
+
+Searching with trigram similarity
+----------------------------
+Another search approach is trigram similarity. A trigram is a group of three consecutive characters. You can measure the similarity of two strings by counting the number of trigrams they share. This approach turns out to be very effective for measuring the similarity of words in many languages.
+
+In order to use trigrams in PostgreSQL, you will need to install the `pg_trgm` extension first. Execute the following command from the shell to connect to your database:
+    `psql <name_of_your_database>`
+
+Then, execute the following command to install the `pg_trgm` extension:
+    `CREATE EXTENSION pg_trgm;`
