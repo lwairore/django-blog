@@ -1,0 +1,51 @@
+runtime: python
+
+# the PROJECT-DIRECTORY is the one with settings.py and wsgi.py
+entrypoint: gunicorn -b :$PORT mysite.wsgi # specific to a GUnicorn HTTP server deployment
+env: flex # for Google Cloud Flexible App Engine
+
+
+# any environment variables you want to pass to your application.
+# accessible through os.environ['VARIABLE_NAME']
+env_variables:
+# the secret key used for the Django app (from PROJECT-DIRECTORY/settings.py)
+  SECRET_KEY: '*8emke^-jjiyszpisib-f@xjt9b72_x465cdx^(gj0jl_70v&)'
+  DEBUG: 'False' # always False for deployment
+  
+# everything after /cloudsql/ can be found by entering >> gcloud sql instances describe DATABASE-NAME << in your Terminal
+# the DATABASE-NAME is the name you gave your project's PostgreSQL database
+# the second line from the describe output called connectionName can be copied and pasted after /cloudsql/
+  DB_HOST: '/cloudsql/my-beta-blog:us-central1:my-beta-blog'
+  CLOUD_PSQL_INSTANCE_IP: '35.192.198.58'
+  DB_PORT: '5432' # PostgreSQL port
+  DB_NAME: 'blog'
+  DB_USER: 'karangu' # either 'postgres' (default) or one you created on the PostgreSQL instance page
+  DB_PASSWORD: 'lmzongolo8754'
+  INSTANCE_CONNECTION_NAME: 'my-beta-blog:us-central1:my-beta-blog'
+
+  GS_PROJECT_ID: 'my-beta-blog'
+  
+  STATIC_URL: 'https://storage.googleapis.com/my-beta-blog-static/static/' # this is the url that you sync static files to
+  
+handlers:
+- url: /static
+  static_dir: staticfiles
+  http_headers: 
+    Access-Control-Allow-Origin: https://my-beta-blog.ue.r.appspot.com
+  
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+# from command >> gcloud sql instances describe DATABASE-NAME <<
+
+beta_settings:
+  cloud_sql_instances: my-beta-blog:us-central1:my-beta-blog
+
+runtime_config:
+  python_version: 3 # enter your Python version BASE ONLY here. Enter 2 for 2.7.9 or 3 for 3.6.4
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 7

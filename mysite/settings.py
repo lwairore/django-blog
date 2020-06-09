@@ -20,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*8emke^-jjiyszpisib-f@xjt9b72_x465cdx^(gj0jl_70v&)'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['DEBUG']
 
-ALLOWED_HOSTS = ['127.0.0.1',]
+print(DEBUG)
+ALLOWED_HOSTS = [os.environ.get('CURRENT_HOST', 'localhost')]
 
 
 # Application definition
@@ -37,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
-    'rest_framework.authtoken',
+    # 'rest_framework',
+    # 'corsheaders',
+    # 'rest_framework.authtoken',
     'blog.apps.BlogConfig',
     'taggit',
     'django.contrib.sites',
@@ -55,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -85,23 +86,70 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:4200',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:4200',
+# ]
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
+application_environment = 'prod'
+
+if application_environment == 'dev':
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'PORT': '',
-        'NAME': 'blog',
-        'USER': 'karangu',
-        'PASSWORD': 'lmzongolo8754',
-        'HOST': '127.0.0.1'
+      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      'NAME': 'blog',
+      'USER': 'karangu',
+      'PASSWORD': 'lmzongolo8754'
+        }
     }
-}
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    # STATIC_URL = os.environ['STATIC_URL']
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'staticfiles'),
+    ]
+
+else:
+    INSTANCE_CONNECTION_NAME = os.environ['INSTANCE_CONNECTION_NAME']
+    DATABASES = {
+    'default': {
+      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      'PORT': os.environ['DB_PORT'],
+      'NAME': os.environ['DB_NAME'],
+      'USER': os.environ['DB_USER'],
+      'PASSWORD': os.environ['DB_PASSWORD'],
+      'HOST': f'/cloudsql/{INSTANCE_CONNECTION_NAME}'
+
+        }
+    }
+    
+
+    # DATABASES['default']['HOST'] = os.environ['DB_HOST']
+    # if os.getenv('GAE_INSTANCE'):
+    #     pass
+    # else:
+    #     DATABASES['default']['HOST'] = '127.0.0.1'
+
+    
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    # STATICFILES_DIRS = [
+    #     os.path.join(BASE_DIR, 'static'),
+    # ]
+
+    
+
+    GS_PROJECT_ID = os.environ['GS_PROJECT_ID']
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_URL = os.environ['STATIC_URL']
+
+
+
 
 
 # Password validation
@@ -143,10 +191,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
 """
     Sending emails with Django is pretty straightforward. First, you will need to have a local SMTP server or define the configuration of an external SMTP server by adding the following:
