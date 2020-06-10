@@ -16,13 +16,12 @@ env_variables:
 # the DATABASE-NAME is the name you gave your project's PostgreSQL database
 # the second line from the describe output called connectionName can be copied and pasted after /cloudsql/
   DB_HOST: '/cloudsql/my-beta-blog:us-central1:my-beta-blog'
-  CLOUD_PSQL_INSTANCE_IP: '35.192.198.58'
+  # CLOUD_PSQL_INSTANCE_IP: '35.192.198.58'
   DB_PORT: '5432' # PostgreSQL port
   DB_NAME: 'blog'
   DB_USER: 'karangu' # either 'postgres' (default) or one you created on the PostgreSQL instance page
   DB_PASSWORD: 'lmzongolo8754'
-  INSTANCE_CONNECTION_NAME: 'my-beta-blog:us-central1:my-beta-blog'
-
+  # INSTANCE_CONNECTION_NAME: 'my-beta-blog:us-central1:my-beta-blog'
   GS_PROJECT_ID: 'my-beta-blog'
   
   STATIC_URL: 'https://storage.googleapis.com/my-beta-blog-static/static/' # this is the url that you sync static files to
@@ -31,7 +30,7 @@ handlers:
 - url: /static
   static_dir: staticfiles
   http_headers: 
-    Access-Control-Allow-Origin: https://my-beta-blog.ue.r.appspot.com
+    Access-Control-Allow-Origin: '*'
   
 - url: /.*
   secure: always

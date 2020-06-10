@@ -1,0 +1,10 @@
+.git
+.cache
+**/__pycache__
+**/migrations
+*.pyc 
+virtual
+*.sql
+*.sh
+.gitignore
+.vscode

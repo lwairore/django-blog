@@ -95,6 +95,9 @@ def post_detail(request, year, month, day, post):
 
 
 def post_share(request, post_id):
+    print('*' * 10)
+    print('Am host user', settings.EMAIL_HOST_USER)
+    print('*' * 10)
     # Retrieve post by id
     post = get_object_or_404(models.Post, id=post_id, status='published')
     sent = False 
