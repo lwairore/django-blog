@@ -5,3 +5,4 @@ virtual/
 blog/templatetags/__pycache__/blog_tags.cpython-36.pyc
 blog/templatetags/__pycache__/__init__.cpython-36.pyc
 *.sh
+.env

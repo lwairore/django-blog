@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
+import dj_database_url
+from decouple import config,Csv
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,10 +27,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-print(DEBUG)
-ALLOWED_HOSTS = [os.environ.get('CURRENT_HOST', 'localhost'), 'my-beta-blog.ue.r.appspot.com']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 
 # Application definition
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -80,48 +84,28 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-    'default': {
-      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-      'NAME': 'blog',
-      'USER': 'karangu',
-      'PASSWORD': 'lmzongolo8754',
-      'PORT': 3306,
-      'HOST': '127.0.0.1'
-        }
-    }
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-    STATIC_URL = '/static/'
-
-    # Extra places for collectstatic to find static files.
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'staticfiles'),
-    ]
-
+if config('MODE')=="dev":
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': config('DB_NAME'),
+           'USER': config('DB_USER'),
+           'PASSWORD': config('DB_PASSWORD'),
+           'HOST': config('DB_HOST'),
+           'PORT': '',
+       }
+       
+   }
+# production
 else:
-    DATABASES = {
-    'default': {
-      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-      'PORT': os.environ['DB_PORT'],
-      'NAME': os.environ['DB_NAME'],
-      'USER': os.environ['DB_USER'],
-      'PASSWORD': os.environ['DB_PASSWORD'],
-        }
-    }
-    
+   DATABASES = {
+       'default': dj_database_url.config(
+           default=config('DATABASE_URL')
+       )
+   }
 
-    DATABASES['default']['HOST'] = os.environ['DB_HOST']
-    if os.getenv('GAE_INSTANCE'):
-        pass
-    else:
-        DATABASES['default']['HOST'] = '127.0.0.1'
-
-    # define the default file storage for static
-    STATICFILES_STORAGE = 'config.storage_backends.GoogleCloudStaticStorage'
-
-    STATIC_URL = os.environ['STATIC_URL']
-
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -176,8 +160,22 @@ SITE_ID = 1
         >>> send_mail('Django mail', 'This e-mail was sent with Django.', 'your_account@gmail.com', ['your_account@gmail.com'], fail_silently=False)
 """
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'kwairore@gmail.com'
-EMAIL_HOST_PASSWORD = 'kwairore8754'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+SENDGRID_MAIL_USERNAME = os.environ.get("SENDGRID_MAIL_USERNAME")
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+STATIC_ROOT = os.path.join('staticfiles')
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
