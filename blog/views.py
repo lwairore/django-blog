@@ -3,7 +3,7 @@ from . import models, forms
 from django.core.paginator import Paginator, EmptyPage, \
         PageNotAnInteger
 from django.views.generic import ListView
-from django.core.mail import send_mail
+from .email import mail_message
 from django.conf import settings
 from taggit.models import Tag
 from django.db.models import Count
@@ -95,9 +95,6 @@ def post_detail(request, year, month, day, post):
 
 
 def post_share(request, post_id):
-    print('*' * 10)
-    print('Am host user', settings.EMAIL_HOST_USER)
-    print('*' * 10)
     # Retrieve post by id
     post = get_object_or_404(models.Post, id=post_id, status='published')
     sent = False 
@@ -110,9 +107,7 @@ def post_share(request, post_id):
             cd = form.cleaned_data
             post_url = request.build_absolute_uri(
                                           post.get_absolute_url())
-            subject = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post.title)
-            message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(post.title, post_url, cd['name'], cd['comments'])
-            send_mail(subject, message, settings.EMAIL_HOST_USER, [cd['to']])
+            mail_message(cd, post, post_url)
             sent = True
     else:
         form = forms.EmailPostForm()
