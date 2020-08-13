@@ -11,6 +11,8 @@
 - Integrate [django_taggit](https://github.com/alex/django-taggit)
 - Custom template tags and filters
 - [Sitemap](http://django-simple-blog-app.herokuapp.com/sitemap.xml) and [post feed](http://django-simple-blog-app.herokuapp.com/feed/)
+- Retrieving posts by similarity
+- Tagging functionality
 
 # Demo
 Here is a working live demo: http://django-simple-blog-app.herokuapp.com/
@@ -29,10 +31,15 @@ This page shows a list of paginated blog posts.
 
 ![This image shows details for a specific post](static/preview/django-simple-blog-specific-post.png)
 
-### Share Page
+#### Share Page
 This page allows a user to share a blog post via email.
 
 ![This image shows the share to page](static/preview/django-simple-blog-share-page.png)
+
+#### Retrieving posts by similarity
+Here you see a list of similar posts.
+
+![](static/preview/post-by-similarity.png)
 
 # [Usage](http://django-simple-blog-app.herokuapp.com/)
 
