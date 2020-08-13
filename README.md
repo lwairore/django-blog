@@ -2,7 +2,7 @@
 
 ![This image shows homepage for Django Simple Blog](static/preview/django-simple-blog-homepage.png)
 
-This is a simple Django blog application
+[Django Simple Blog](http://django-simple-blog-app.herokuapp.com/) is a personal blogging website where you can create and share you opinions and other users can read and comment on them.
 
 # Features
 - Paginated blog posts
@@ -22,11 +22,14 @@ This page shows a list of paginated blog posts.
 
 ![This image shows homepage for Django Simple Blog](static/preview/django-simple-blog-homepage.png)
 
-### [Blog Post detail page](http://django-simple-blog-app.herokuapp.com/2020/8/12/eget-nulla-facilisi-etiam-dignissim-diam/)
+### View most recent posts and most commented posts
+![](static/preview/django-simple-blog-most-recent.png)
 
-![This image shows details for a specific post](static/preview/django-simple-blog-post-detail.png)
+### Blog Post detail page
 
-### [Share Page](http://django-simple-blog-app.herokuapp.com/16/share/)
+![This image shows details for a specific post](static/preview/django-simple-blog-specific-post.png)
+
+### Share Page
 This page allows a user to share a blog post via email.
 
 ![This image shows the share to page](static/preview/django-simple-blog-share-page.png)
