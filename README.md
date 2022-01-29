@@ -1,8 +1,8 @@
-# Django Simple Blog
+# Django Blog
 
-![This image shows homepage for Django Simple Blog](static/preview/django-simple-blog-homepage.png)
+![This image shows homepage for Django Blog](static/preview/django-simple-blog-homepage.png)
 
-[Django Simple Blog](http://django-simple-blog-app.herokuapp.com/) is a personal blogging website where you can create and share you opinions and other users can read and comment on them.
+[Django Blog](http://django-simple-blog-app.herokuapp.com/) is a personal blogging website where you can create and share you opinions and other users can read and comment on them.
 
 # Features
 - Paginated blog posts
@@ -22,7 +22,7 @@ Here is a working live demo: http://django-simple-blog-app.herokuapp.com/
 ### [Landing Page](http://django-simple-blog-app.herokuapp.com/)
 This page shows a list of paginated blog posts.
 
-![This image shows homepage for Django Simple Blog](static/preview/django-simple-blog-homepage.png)
+![This image shows homepage for Django Blog](static/preview/django-simple-blog-homepage.png)
 
 ### View most recent posts and most commented posts
 ![](static/preview/django-simple-blog-most-recent.png)
